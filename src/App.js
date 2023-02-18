@@ -4,7 +4,7 @@ import "./App.css"
 
 function App() {
   return (
-    <ParticleSystem myImage={"/public/duomo.jpg"}></ParticleSystem>
+    <ParticleSystem myImage={"duomo.jpg"}></ParticleSystem>
   );
 }
 
