@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
-
-const ParticleSystem = ({ myImage }) => {
-  const filigrana = 1;
-  const dim = 5;
-  const [particlesArray, setParticlesArray] = useState([]);
+ 
+const ParticleSystem = ({ myImage, filigrana, dim }) => {
   const image = new Image();
+  const [particlesArray, setParticlesArray] = useState([]);
   const canvasRef = useRef(null);
+  const [initOnce, setInitOnce] = useState(false);
 
   useEffect(() => {
+
     if (!canvasRef) return;
     if (!myImage) return;
 
@@ -15,9 +15,9 @@ const ParticleSystem = ({ myImage }) => {
     const ctx = canvas.getContext('2d');
     canvas.width = 1000;
     canvas.height = 700;
-
     image.src = myImage;
-    image.onload = () => {
+
+    const handleLoadImage = () => {
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
       const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -73,6 +73,8 @@ const ParticleSystem = ({ myImage }) => {
             this.speed = mappedImage[this.position1][this.position2].cellBrightness;
           }
 
+          this.velocity = Math.random() * filigrana;
+          this.size = Math.random() * 1.5 + dim;
           let movement = (2.5 - this.speed) + this.velocity;
           this.angle++;
           //this.angle+=0.2;
@@ -80,32 +82,30 @@ const ParticleSystem = ({ myImage }) => {
 
 
           // For vertical top-down movement
-          /*
-          this.y += movement+Math.sin(this.angle)*2;
-          if(this.y >= canvas.height){
-              //this.y = 0;
-              this.y = Math.random() * canvas.height;
-              this.x = Math.random() * canvas.width;
-          }
-          */
-
-          // For vertical down-top movement
-          this.y -= movement + Math.sin(this.angle) * 2;
-          if (this.y <= 0) {
+          this.y += movement + Math.sin(this.angle) * 2;
+          if (this.y >= canvas.height) {
             //this.y = 0;
             this.y = Math.random() * canvas.height;
             this.x = Math.random() * canvas.width;
           }
 
+          // // For vertical down-top movement
+          // this.y -= movement + Math.sin(this.angle) * 2;
+          // if (this.y <= 0) {
+          //   //this.y = 0;
+          //   this.y = Math.random() * canvas.height;
+          //   this.x = Math.random() * canvas.width;
+          // }
+
 
 
           //For orizontal left-right movement
           //We can also add Math.sin(this.angle)*2 to this.x, but it could be lag a lot
-          this.x += movement;
-          if (this.x >= canvas.width) {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-          }
+          // this.x += movement;
+          // if (this.x >= canvas.width) {
+          //   this.x = Math.random() * canvas.width;
+          //   this.y = Math.random() * canvas.height;
+          // }
         }
 
         draw(r, g, b) {
@@ -122,17 +122,22 @@ const ParticleSystem = ({ myImage }) => {
       }
 
       function init() {
-        let tempParticlesArray = [];
-        const numberOfParticles = 5000;
-        for (let i = 0; i < numberOfParticles; i++) {
-          tempParticlesArray.push(new Particle(canvas, mappedImage, random, filigrana, dim));
+        if (particlesArray.length > 0) {
+          setParticlesArray([]);
         }
-        setParticlesArray(tempParticlesArray);
+        const numberOfParticles = 1000;
+        for (let i = 0; i < numberOfParticles; i++) {
+          setParticlesArray(particlesArray.push(new Particle(canvas, mappedImage, random, filigrana, dim)));
+        }
+        setInitOnce(true);
       }
+      console.log(initOnce)
 
-      init();
-
-      function animate() {
+      if(!initOnce) {
+        init();
+      } 
+      
+      function animate(){
         ctx.globalAlpha = 0.05;
         ctx.fillStyle = 'rgb(0, 0, 0, 0.05)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -142,14 +147,18 @@ const ParticleSystem = ({ myImage }) => {
           ctx.globalAlpha = particlesArray[i].speed * 0.5;
           particlesArray[i].draw(255, 255, 255);
         }
-
         requestAnimationFrame(animate);
       }
       animate();
     }
+
+    image.addEventListener('load', handleLoadImage);
+    return () => {
+      image.removeEventListener('load', handleLoadImage);
+    }
   }, []);
 
-  return <canvas id="canvas1" ref={canvasRef} />;
+  return <canvas id="canvas1" ref={canvasRef}/>;
 };
 
 export default ParticleSystem;
