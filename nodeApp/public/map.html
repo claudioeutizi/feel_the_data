@@ -13,20 +13,14 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/p5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/addons/p5.sound.min.js"></script>
+  <script src="./map/mappa.js" type="text/javascript"></script>
 </head>
 
 <body>
-  <div class="main-title-container">
-    <script src="./particleText/ParticleTextSystem.js"></script>
+  <div class="map-container">
+    <script src="./map/PoI.js"></script> 
+    <script src="./map/map.js"></script>
   </div>
-
-  <button id="map-button">Play</button>
-  <script>
-    document.getElementById("map-button").addEventListener("click", function () {
-      window.location.href = "/map.html";
-    });
-  </script>
-
 </body>
 
 </html>

@@ -40,7 +40,7 @@ class PoI {
   }
 
   mouseClicked() {
-    console.log(this.title + " clicked!");
+    window.location.href = "/city.html";
   }
 
   isSelected(px, py, zoom) {
