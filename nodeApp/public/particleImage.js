@@ -1,10 +1,8 @@
 const urlParams = new URLSearchParams(window.location.search);
-const lat = parseFloat(urlParams.get('lat'));
-const lng = parseFloat(urlParams.get('lng'));
-
+const city = urlParams.get('city');
 const myImage = new Image();
 
-myImage.src = "duomo.png";
+myImage.src = cities.find(c => c.name === city).imgSrc;
 
 /*---------------------------------------------------------------------------------------*/
 var filigrana = 0;
@@ -16,7 +14,6 @@ let particleAngle = Math.PI;
 let particleVelocity = 0;
 let valpollution = 0;
 let valoriOttenuti = false;
-
 
 let loadingIndicator = document.getElementById("loading");
 

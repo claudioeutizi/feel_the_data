@@ -1,12 +1,12 @@
 class PoI {
-  constructor(lat, lng, x, y, w, h, title) {
+  constructor(lat, lng, x, y, w, h, place) {
     this.lat = lat; //Note that in geojson notation longitude comes first, not latitude as usual.
     this.lng = lng;
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
-    this.title = title;
+    this.place = place;
   }
 
   over(px, py, zoom) {
@@ -17,7 +17,7 @@ class PoI {
       fill(150);
       stroke(255);
       ellipse(px, py, zoom*10, zoom*10);
-      text(this.title, this.x + 15, this.y);
+      text(this.place, this.x + 15, this.y);
       if (this.isSelected(px, py, zoom)) {
         selectedPoI = this;
       }
@@ -40,7 +40,7 @@ class PoI {
   }
 
   mouseClicked() {
-    window.location.href = `/city.html?lat=${this.lat}&lng=${this.lng}`;
+    window.location.href = `/city.html?lat=${this.lat}&lng=${this.lng}&city=${this.place.split(",")[0]}`;
   }
 
   isSelected(px, py, zoom) {
