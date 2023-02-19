@@ -1,3 +1,7 @@
+const urlParams = new URLSearchParams(window.location.search);
+const lat = parseFloat(urlParams.get('lat'));
+const lng = parseFloat(urlParams.get('lng'));
+
 const myImage = new Image();
 
 myImage.src = "duomo.png";
@@ -16,8 +20,6 @@ function random(min, max) {
 
 setInterval(function() {
     val = !val;
-    console.log(val);
-    console.log(filigrana);
   }, 10000);
   
 
