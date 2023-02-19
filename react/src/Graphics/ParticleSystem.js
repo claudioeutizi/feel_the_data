@@ -50,7 +50,7 @@ const ParticleSystem = ({ myImage, filigrana, dim }) => {
     const handleLoadImage = () => {
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
       const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      //ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       let mappedImage = [];
       for (let y = 0; y < canvas.height; y++) {
@@ -69,7 +69,7 @@ const ParticleSystem = ({ myImage, filigrana, dim }) => {
         }
         mappedImage.push(row);
       }
-      const numberOfParticles = 10000;
+      const numberOfParticles = 5000;
       const newParticlesArray = [];
       for (let i = 0; i < numberOfParticles; i++) {
         newParticlesArray.push(new Particle(canvas, ctx, mappedImage, filigrana, dim));

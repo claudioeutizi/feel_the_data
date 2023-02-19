@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import p5 from 'p5';
-import Mappa from 'mappa-mundi';
 import data from './features.json';
+const Mappa = require('mappa-mundi');
 
 const access_key = 'pk.eyJ1IjoiZmVkZXJpY2F6ZSIsImEiOiJjbGU3ZnVtdGIwNTI1M3drYjNsZmI2dXFqIn0.iuLx-zbshEuL8xarAB3pQw';
 const style = 'mapbox://styles/federicaze/cle7ggjxk002j01qldo0aupi9';
@@ -25,9 +25,9 @@ const Map = () => {
     let myMap;
     let poiPoints = [];
   
-    p.load = () => {
-      p.loadJSON(data);
-    };
+    // p.preload = () => {
+    //   p.loadJSON(data);
+    // };
   
     p.setup = () => {
       const canvas = p.createCanvas(window.innerWidth, window.innerHeight);

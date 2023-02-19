@@ -17,13 +17,13 @@ function App() {
   
   return (
     <div>
-      {/* <Map></Map> */}
       <span>Filigrana:</span>
       <input type="range" id="#filigrana-slider" min="1" max="20" value={filigranaValue} onChange={handleFiligranaSliderChange} />
       <br/>
       <span>Dim:</span>
       <input type="range" id="#dim-slider" min="10" max="30" value={dimValue} onChange={handleDimSliderChange} />
       <ParticleSystem filigrana={filigranaValue} dim = {dimValue} myImage={"duomo.jpg"}></ParticleSystem>
+      <Map></Map>
     </div>
   );
 }

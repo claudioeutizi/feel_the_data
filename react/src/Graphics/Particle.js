@@ -1,5 +1,3 @@
-
-
 export class Particle {
     constructor(canvas, ctx, mappedImage, filigrana, dim) {
       this.x = Math.random() * canvas.width;
