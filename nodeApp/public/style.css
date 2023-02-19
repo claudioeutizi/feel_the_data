@@ -2,15 +2,10 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background: black;
 }
 
-#canvas1{
-    border: 2px solid white;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    width:1000px;
-    height:700px;
+body {
+    display: grid;
+    grid-template-rows: 50% 50%
+    
 }
