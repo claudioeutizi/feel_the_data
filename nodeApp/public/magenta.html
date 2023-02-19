@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="magenta.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+<body>
+<div id="container">
+    <div class="controls">
+      <div class="control-group">
+      </div>
+      <div class="control-group">
+      </div>
+    </div>
+    <svg id="vis" viewBox="0 0 1000 1000">
+      <defs>
+        <radialGradient id="halo">
+          <stop offset="0%" stop-color="rgba(255, 255, 255, 0.5)" />
+          <stop offset="95%" stop-color="rgba(255, 255, 255, 0.5)" />
+          <stop offset="100%" stop-color="rgba(255, 255, 255, 0)" />
+        </radialGradient>
+      </defs>
+      <g id="vis-halos"></g>
+      <g id="vis-elements"></g>
+    </svg>
+    <div class="controls">
+      <div class="control-group">
+      </div>
+      <div class="control-group">
+      </div>
+    </div>
+  </div>
+  <div id="output-controls">
+    <div class="output-control midi-required">
+      <label for="output-selector">Output</label>
+      <select id="output-selector"></select>
+    </div>
+    <div class="output-control">
+      <label for="tempo-source-selector">Tempo</label>
+      <select id="tempo-source-selector" class="midi-required"></select>
+      <input id="tempo-selector" type="range" min="10" max="200" step="1" value="90">
+      <span id="tempo-label">90</span>
+    </div>
+    <p>MIDI outputs & clock <a href="https://caniuse.com/#feat=midi">supported on Chrome only</a>.</p>
+  </div>
+  <div id="loading">Loading models&hellip;</div>
+  <div id="generating" style="display: none">Generating&hellip;</div>
+  
+</body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.5/lodash.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.1.11/dist/magentamusic.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/webmidi@2.0.0/webmidi.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/web-animations-js@2.3.1/web-animations.min.js"></script>
+  <script src="https://cdn.rawgit.com/tambien/StartAudioContext/8da8637e/StartAudioContext.js"></script>
+  <script src="https://cdn.rawgit.com/danigb/tonal/9b6b1663/dist/tonal.min.js"></script>
+  <script src="open_weather_supremo.js"></script>
+  <script src="magenta.js"></script>
+
+  </html>
