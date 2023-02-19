@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ParticleSystem from "./Graphics/ParticleSystem";
 import "./App.css"
+import Map from "./Map/Map";
 
 function App() {
   const [filigranaValue, setFiligranaValue] = useState(20);
@@ -16,6 +17,7 @@ function App() {
   
   return (
     <div>
+      {/* <Map></Map> */}
       <span>Filigrana:</span>
       <input type="range" id="#filigrana-slider" min="1" max="20" value={filigranaValue} onChange={handleFiligranaSliderChange} />
       <br/>

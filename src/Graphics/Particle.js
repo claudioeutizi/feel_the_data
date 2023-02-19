@@ -32,9 +32,13 @@ export class Particle {
       this.y += movement + Math.sin(this.angle) * 2;
       this.x += movement + Math.cos(this.angle) * 1;
       if (this.y >= this.canvas.height) {
-        //this.y = 0;
-        this.y = Math.random() * this.canvas.height;
+        this.y = 0;
         this.x = Math.random() * this.canvas.width;
+      }
+
+      if (this.x >= this.canvas.width) {
+        this.x = 0;
+        this.y = Math.random() * this.canvas.width;
       }
   
       // // For vertical down-top movement

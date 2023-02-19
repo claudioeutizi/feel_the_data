@@ -69,7 +69,7 @@ const ParticleSystem = ({ myImage, filigrana, dim }) => {
         }
         mappedImage.push(row);
       }
-      const numberOfParticles = 1000;
+      const numberOfParticles = 10000;
       const newParticlesArray = [];
       for (let i = 0; i < numberOfParticles; i++) {
         newParticlesArray.push(new Particle(canvas, ctx, mappedImage, filigrana, dim));
