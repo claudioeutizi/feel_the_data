@@ -6,7 +6,7 @@ myImage.src = cities.find(c => c.name === city).imgSrc;
 
 /*---------------------------------------------------------------------------------------*/
 var filigrana = 0;
-var dim = 6;
+var dim = 3;
 var raggio = 0.4;
 var val = true;
 
@@ -17,11 +17,10 @@ let valoriOttenuti = false;
 
 let loadingIndicator = document.getElementById("loading");
 
+/*Function that returns a random value between min number and max number*/
 function random(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
-//Every 5 seconds  val became true or false
 
 function setGraphicParameters(data) {
     console.log("wind speed " + data["weather"].wind.speed);
@@ -29,6 +28,9 @@ function setGraphicParameters(data) {
     console.log("wind degrees " + data["weather"].wind.deg);
     particleVelocity = data["weather"].wind.speed;
 
+    /* Dimension of particles depends on the weather: closer to max temperture means huge dimension */
+    dim = mapValue(data["weather"].main.temp,data["weather"].main.temp_min,data["weather"].main.temp_max,3,10);
+    
     pm10 = data["pollution"].list[0].components.pm10;
     if (pm10 > 160) pm10 = 160;
     valpollution = mapValue(pm10, 0, 160, 0, 1);
@@ -45,12 +47,6 @@ function setGraphicParameters(data) {
     //loadingIndicator.textContent = "";
     console.log("fine set graphic");
 }
-
-/*
-setInterval(function() {
-    val = !val;
-  }, 10000);
-  */
 
 myImage.addEventListener('load', function () {
     const canvas = document.getElementById('canvas1');
@@ -104,7 +100,6 @@ myImage.addEventListener('load', function () {
             this.y = Math.random() * canvas.height;
             this.speed = 0;
             this.velocity = Math.random() * filigrana;
-            //Più è grande filigrana più l'immagine è fitta, 0.01 <= filigrana <= 20 è ok
             this.size = Math.random() * 1.5 + dim;
             this.position1 = Math.floor(this.y);
             this.position2 = Math.floor(this.x);
@@ -125,10 +120,10 @@ myImage.addEventListener('load', function () {
 
             noiseValue = noise.get(this.x * this.noiseScale, this.y * this.noiseScale, this.noiseOffset);
 
-            // Calculate the new position of the particle based on the noise value
+            /*Calculate the new position of the particle based on the noise value*/
             angle = noiseValue * Math.PI * 2 * valpollution;
 
-            //Set velocity and size 
+            /*Set velocity and size*/
             this.velocity = particleVelocity * filigrana;//Math.random() ;
             this.size = Math.random() * 1.5 + dim;
 
@@ -139,7 +134,7 @@ myImage.addEventListener('load', function () {
             this.y -= movement * Math.sin(angle + particleAngle);
 
 
-            // For vertical bottom-up movement
+            /* For vertical bottom-up movement */
             //this.y -= movement * Math.sin(particleAngle);// + Math.sin(this.angle)*20;
 
             if (this.y <= 0 || this.y >= canvas.height) {
@@ -148,8 +143,10 @@ myImage.addEventListener('load', function () {
                 this.x = Math.random() * canvas.width;
             }
 
-            //For orizontal left-right movement
-            //We can also add Math.sin(this.angle)*2 to this.x, but it could be lag a lot
+            /* 
+            For orizontal left-right movement.
+            We can also add Math.sin(this.angle)*2 to this.x, but it could be lag a lot.
+            */
             //this.x += movement * Math.cos(particleAngle); //+ Math.sin(this.angle/(1/this.velocity))*2;
 
             if (this.x >= canvas.width || this.x <= 0) {
@@ -166,7 +163,6 @@ myImage.addEventListener('load', function () {
 
                 if ((mappedImage[this.position1]) &&
                     (this.speed = mappedImage[this.position1][this.position2])) {
-                    //ctx.fillStyle = 'rgb('+r+','+g+','+b+')';
                     ctx.fillStyle = mappedImage[this.position1][this.position2][1];
                 }
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * raggio);

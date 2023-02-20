@@ -3,19 +3,12 @@ const lng = parseFloat(urlParams.get('lng'));
 const timeout = 100;  //milliseconds
 var weather, pollution;
 
-//London
-
-//var la = 51.507351;
-//var lo = -0.127758;
-
-var a, b, c;
-
 /*- - - - - - - - Functions - - - - - - - - */
 
 // Function that creates the URL for get the data from OpenWeather
 // inputs: index = 0 for weather, other for pollution; l1 = latitude; l2 = longitude
 // return: string of url
-function getURLFromOpenWeather(index, l1, l2) {
+function getURLFromOpenWeather(index, lati, long) {
   // index == 0 for weather, index 1= 0 for pollution
   var api;
   var url;
@@ -24,8 +17,8 @@ function getURLFromOpenWeather(index, l1, l2) {
   } else {
     api = 'https://api.openweathermap.org/data/2.5/air_pollution?';
   }
-  var latitude = 'lat=' + l1;
-  var longitude = '&lon=' + l2;
+  var latitude = 'lat=' + lati;
+  var longitude = '&lon=' + long;
   var city = latitude + longitude;
   var apiKey = '&appid=dc36bb48e82a90d6e689af6a87acdb60';
   //or
@@ -58,7 +51,7 @@ function fetchPollution() {
 }
 
 // Function for fetch the jsons of weather and pollution and save them into global varaibles
-function getData() {
+function getDataFromOpenWeatherSupremo() {
   fetchWeather();
   fetchPollution();
 }
@@ -77,7 +70,7 @@ async function mainOpenWeather() {
   /* First phase : setup */
 
   //Getting data from Openweather
-  getData();
+  getDataFromOpenWeatherSupremo();
 
   //Wait for some milliseconds until the variables are not undefined
   while (weather == undefined || pollution == undefined) { await delay(); }
@@ -87,18 +80,11 @@ async function mainOpenWeather() {
   /*------------------------------*/
 
   /* Second phase */
-  /*------------------------------*/
-  //console.log(weather);
-  //console.log(pollution);
-  /*------------------------------*/
   returned_data = {
     "weather": weather,
     "pollution": pollution
+  /*------------------------------*/
   }
 
   return returned_data;
 }
-
-
-/*- - - - Main - - - -*/
-//mainFunction();
