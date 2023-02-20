@@ -49,6 +49,10 @@ function setup() {
 function draw() {
   background(51);
   clear();
+  textSize(28);
+  fill(255, 255, 255, 70);
+  text('Click on a city to Feel the Data!', 10, 30);
+
   if (loaded) {
     for (let i = 0; i < poiPoints.length; i++) {
       var pos = myMap.latLngToPixel(poiPoints[i].lat, poiPoints[i].lng);

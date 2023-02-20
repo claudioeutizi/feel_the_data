@@ -26,13 +26,13 @@ function setup() {
         'FEEL THE DATA', 0, 0, 250);
 
     subtitlePoints = font.textToPoints(
-        'The data sonification project.', 300, -300, 50, {
+        'A data sonification project.', 300, -300, 50, {
         sampleFactor: 0.5,
         simplifyThreshold: 0
     });
 
     subtitleBounds = font.textBounds(
-        'The data sonification project.', 0, 0, 100);
+        'A data sonification project.', 0, 0, 100);
 
     cursor(CROSS);
     fill(255, 127);
