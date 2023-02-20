@@ -39,11 +39,11 @@ function setGraphicParameters(data) {
     filigrana = mapValue(no2, 0, 350, 0.5, 7);
     console.log(filigrana);
 
-    startTransportPlay();
     Tone.Transport.start();
 
     valoriOttenuti = true;
-    loadingIndicator.textContent = "";
+    //loadingIndicator.textContent = "";
+    console.log("fine set graphic");
 }
 
 /*

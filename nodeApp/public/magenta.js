@@ -80,7 +80,7 @@ let chordLeft = CHORD_SYMBOLS['major'], chordRight = CHORD_SYMBOLS['major'];
 let tonicLeft = 0, tonicRight = 0;
 let currentMidiOutput;
 let transportPlayerId = null;
-let wait_time = 30000;
+let wait_time = 4000;
 let loopRestarted = 0;
 var check = {restarted: 0};
 let pollList = [];
@@ -209,7 +209,6 @@ function playStep(time = Tone.now() - Tone.context.lookAhead) {
   if(currentStep % SEQ_LENGTH == 0){
     loopRestarted++;
     div.dispatchEvent(loopEvent);
-    console.log(Tone.Transport);
   }
   currentStep++;
 }
@@ -335,14 +334,14 @@ function mainProcess(){
   //Chiamata OW
   mainOpenWeather().then(res => {
     setGraphicParameters(res);
-    
+    console.log("pre extraction");
     newMusicData = extractOWData(res);
     let pollList2 = [];
     let tempList2 = [];
     console.log("new poll " + newMusicData.pollution_chord);
     console.log("old poll " + musicData.pollution_chord);
-    console.log("new poll " + newMusicData.weather_chord);
-    console.log("old poll " + musicData.weather_chord);
+    console.log("new weather " + newMusicData.weather_chord);
+    console.log("old weather " + musicData.weather_chord);
     Promise.all([
       generateSpace(0,musicData.pollution_chord, 0, newMusicData.pollution_chord, pollList2), 
       generateSpace(0,musicData.weather_chord, 0, newMusicData.weather_chord, tempList2)])
@@ -389,10 +388,10 @@ function extractOWData(data){
   arousal = mapValue(pm10, 0, 180, -1, 1);
   console.log("arousal: " + arousal);
 
-  console.log(valuesToChords(valence, arousal));
+  console.log("weather" + data["weather"].weather[0].id);
   return {
     pollution_chord: valuesToChords(valence, arousal),
-    weather_chord: weatherToChords(data["weather"].weather[0].main)
+    weather_chord: weatherToChords(data["weather"].weather[0].id)
   }
 }
 
@@ -402,29 +401,42 @@ function mapValue(value, fromMin, fromMax, toMin, toMax) {
   return outputValue;
 }
 
-function weatherToChords(string){
-  if(string == "Clear"){
-    Tone.Transport.bpm.value = 50;
+function weatherToChords(id){
+  if(id == 800){
+    //clear
+    changeBPM(50);
     return CHORD_SYMBOLS['major'];
-  } else if(string == "Thunderstorm"){
-    Tone.Transport.bpm.value = 120;
+  } else if(id >= 200 && id <= 232){
+    //thunderstorm
+    changeBPM(120);
     return CHORD_SYMBOLS["minor7th"];
-  } else if(string == "Rain"){
-    Tone.Transport.bpm.value = 50;
+  } else if(id >= 500 && id <= 531){
+    //rain
+    changeBPM(50);
     return CHORD_SYMBOLS["minor"];
-  } else if(string == "Snow"){
-    Tone.Transport.bpm.value = 70;
+  } else if(id >= 600 && id <= 622){
+    //snow
+    changeBPM(70);
     return CHORD_SYMBOLS["sus2"];
-  } else if(string == "Atmosphere"){
-    Tone.Transport.bpm.value = 60;
+  } else if(id >= 701 && id <= 781){
+    //atmosphere
+    changeBPM(60);
     return CHORD_SYMBOLS["sus4"];
-  } else if(string == "Drizzle"){
-    Tone.Transport.bpm.value = 90;
+  } else if(id >= 300 && id <= 321){
+    //drizzle
+    changeBPM(90);
     return CHORD_SYMBOLS["major7th"];
-  } else if(string == "Clouds"){
-    Tone.Transport.bpm.value = 55;
+  } else if(id >= 801 && id <= 804){
+    //clouds
+    changeBPM(55);
     return CHORD_SYMBOLS["dominant7th"];
   }
+}
+
+function changeBPM(value){
+  Tone.Transport.stop();
+  Tone.Transport.bpm.value = value;
+  Tone.Transport.start();
 }
 
 //ritorna l'accordo secondo il piano valence-arousal di chatGPT
@@ -466,10 +478,11 @@ Promise.all([
         pollList[0].on = true;
         tempList[0].on = true;
         //Dopo 5 sec chiama la funzione principale
-        setTimeout(mainProcess, 5000);
+        setTimeout(mainProcess, 2000);
     })
   });
   })
+  .then(() => startTransportPlay())
 
 
 StartAudioContext(Tone.context, container);
