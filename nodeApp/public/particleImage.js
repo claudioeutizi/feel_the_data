@@ -4,11 +4,23 @@ const myImage = new Image();
 
 myImage.src = cities.find(c => c.name === city).imgSrc;
 
+const epicStrings = [
+    "As people, not only are we starting to see the impact",
+    "of our actions on our planet, but it’s becoming impossible to deny it...",
+    "You never change things by fighting the existing reality. ",
+    "To change something, build a new model that makes the existing model obsolete.",
+    "Climate change is real. It is happening right now, it is the most urgent threat facing,",
+    "our entire species and we need to work collectively together and stop procrastinating.",
+    "We don’t have time to sit on our hands as our planet burns. For young people,",
+    " climate change is bigger than election or re-election. It’s life or death."
+]
+
 /*---------------------------------------------------------------------------------------*/
 var filigrana = 0;
 var dim = 3;
 var raggio = 0.4;
 var val = true;
+var epics = 0;
 
 let particleAngle = Math.PI;
 let particleVelocity = 0;
@@ -16,6 +28,16 @@ let valpollution = 0;
 let valoriOttenuti = false;
 
 let loadingIndicator = document.getElementById("loading");
+
+function getRandomValue(value1, value2, value3, value4) {
+    const values = [value1, value2, value3, value4];
+    const randomIndex = Math.floor(Math.random() * values.length);
+    return values[randomIndex];
+  }
+
+/* Selection of strings to print out */
+epics = getRandomValue(0,2,4,6);
+console.log(epics);
 
 /*Function that returns a random value between min number and max number*/
 function random(min, max) {
@@ -30,7 +52,7 @@ function setGraphicParameters(data) {
 
     /* Dimension of particles depends on the weather: closer to max temperture means huge dimension */
     dim = mapValue(data["weather"].main.temp,data["weather"].main.temp_min,data["weather"].main.temp_max,3,10);
-    
+
     pm10 = data["pollution"].list[0].components.pm10;
     if (pm10 > 160) pm10 = 160;
     valpollution = mapValue(pm10, 0, 160, 0, 1);
@@ -77,6 +99,7 @@ myImage.addEventListener('load', function () {
 
             const cell = [
                 cellBrightness = brightness,
+                //cellColor = 'rgb(' + red + ',' + green + ',' + blue + ')',
                 cellColor = 'rgb(' + red + ',' + green + ',' + blue + ')',
             ];
 
@@ -85,12 +108,14 @@ myImage.addEventListener('load', function () {
         mappedImage.push(row);
     }
 
+    /* Compute the values of brightness of rgb color perceived by the human eye */
     function calculateRelativeBrightness(red, green, blue) {
         return Math.sqrt(
             (red * red) * 0.299 +
             (green * green) * 0.587 +
             (blue * blue) * 0.114
         ) / 100;
+    
     }
 
 
@@ -170,9 +195,12 @@ myImage.addEventListener('load', function () {
             } else {
 
                 ctx.fillStyle = "white";
+                
+                //.fillText("As people, not only are we starting to see the impact", (canvas.width / 2) - 250, canvas.height / 2);
+                //ctx.fillText("of our actions on our planet, but it’s becoming impossible to deny it...", (canvas.width / 2) - 350, canvas.height / 2 + 50);
 
-                ctx.fillText("As people, not only are we starting to see the impact", (canvas.width / 2) - 250, canvas.height / 2);
-                ctx.fillText("of our actions on our planet, but it’s becoming impossible to deny it...", (canvas.width / 2) - 350, canvas.height / 2 + 50);
+                ctx.fillText(epicStrings[epics], (canvas.width / 2) - 250, canvas.height / 2);
+                ctx.fillText(epicStrings[epics+1], (canvas.width / 2) - 350, canvas.height / 2 + 50);
             }
         }
     }
