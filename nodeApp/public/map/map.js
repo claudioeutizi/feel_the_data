@@ -37,7 +37,7 @@ function mouseClicked() {
 var loaded = false;
 
 function setup() {
-  canvas = createCanvas(windowWidth*0.8, windowHeight/2);
+  canvas = createCanvas(windowWidth, windowHeight);
   // Create a tile map and overlay the canvas on top.
   myMap = mappa.tileMap(options);
   myMap.overlay(canvas);
@@ -47,6 +47,7 @@ function setup() {
 }
 
 function draw() {
+  background(51);
   clear();
   if (loaded) {
     for (let i = 0; i < poiPoints.length; i++) {

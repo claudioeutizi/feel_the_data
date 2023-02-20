@@ -3,6 +3,113 @@
     {
       "type": "Feature",
       "properties": {
+        "wikidata": "Q85",
+        "place_name": "Cairo, Egypt"
+      },
+      "geometry": {
+        "coordinates": [
+          31.235726,
+          30.044388
+        ],
+        "type": "Point"
+      },
+      "id": "place.1067075"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_code": "DE-BE",
+        "wikidata": "Q64",
+        "place_name": "Berlin, Germany"
+      },
+      "geometry": {
+        "coordinates": [
+          13.388859,
+          52.517036
+        ],
+        "type": "Point"
+      },
+      "id": "place.115770"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "wikidata": "Q1754",
+        "place_name": "Stockholm, Sweden"
+      },
+      "geometry": {
+        "coordinates": [
+          18.071093,
+          59.325117
+        ],
+        "type": "Point"
+      },
+      "id": "place.11864264"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "wikidata": "Q60",
+        "place_name": "New York, United States"
+      },
+      "geometry": {
+        "coordinates": [
+          -73.9866,
+          40.7306
+        ],
+        "type": "Point"
+      },
+      "id": "place.233720044"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "wikidata": "Q3130",
+        "place_name": "Sydney, Australia"
+      },
+      "geometry": {
+        "coordinates": [
+          151.21,
+          -33.868
+        ],
+        "type": "Point"
+      },
+      "id": "place.24496142"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_code": "CN-BJ",
+        "wikidata": "Q956",
+        "place_name": "Beijing, China"
+      },
+      "geometry": {
+        "coordinates": [
+          116.391275,
+          39.906217
+        ],
+        "type": "Point"
+      },
+      "id": "place.279601"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "wikidata": "Q987",
+        "place_name": "New Delhi, India"
+      },
+      "geometry": {
+        "coordinates": [
+          77.209006,
+          28.613895
+        ],
+        "type": "Point"
+      },
+      "id": "place.31664235"
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "wikidata": "Q2807",
         "place_name": "Madrid, Spain"
       },
@@ -14,6 +121,99 @@
         "type": "Point"
       },
       "id": "place.34564166"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "wikidata": "Q174",
+        "place_name": "São Paulo, Brazil"
+      },
+      "geometry": {
+        "coordinates": [
+          -46.6334,
+          -23.5507
+        ],
+        "type": "Point"
+      },
+      "id": "place.39790624"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_code": "RU-MOW",
+        "wikidata": "Q649",
+        "place_name": "Moscow, Russia"
+      },
+      "geometry": {
+        "coordinates": [
+          37.617494,
+          55.750446
+        ],
+        "type": "Point"
+      },
+      "id": "place.558274"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "wikidata": "Q5465",
+        "place_name": "Cape Town, South Africa"
+      },
+      "geometry": {
+        "coordinates": [
+          18.4289,
+          -33.9351
+        ],
+        "type": "Point"
+      },
+      "id": "place.6670590"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "wikidata": "Q84",
+        "place_name": "London, England"
+      },
+      "geometry": {
+        "coordinates": [
+          -0.127647,
+          51.507321
+        ],
+        "type": "Point"
+      },
+      "id": "place.6957135"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_code": "FR-75",
+        "wikidata": "Q90",
+        "place_name": "Paris, France"
+      },
+      "geometry": {
+        "coordinates": [
+          2.348391,
+          48.853495
+        ],
+        "type": "Point"
+      },
+      "id": "place.894029"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_code": "AR-C",
+        "wikidata": "Q1486",
+        "place_name": "Buenos Aires, Argentina"
+      },
+      "geometry": {
+        "coordinates": [
+          -58.437089,
+          -34.607568
+        ],
+        "type": "Point"
+      },
+      "id": "place.9227"
     },
     {
       "type": "Feature",
