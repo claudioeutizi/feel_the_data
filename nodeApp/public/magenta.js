@@ -434,9 +434,10 @@ function weatherToChords(id){
 }
 
 function changeBPM(value){
-  Tone.Transport.stop();
+  /*Tone.Transport.stop();
   Tone.Transport.bpm.value = value;
-  Tone.Transport.start();
+  Tone.Transport.start();*/
+  Tone.Transport.bpm.rampTo(value, 1);
 }
 
 //ritorna l'accordo secondo il piano valence-arousal di chatGPT
@@ -477,6 +478,7 @@ Promise.all([
         console.log("generata prima sequenza");
         pollList[0].on = true;
         tempList[0].on = true;
+        setGraphicParameters(res);
         //Dopo 5 sec chiama la funzione principale
         setTimeout(mainProcess, 2000);
     })

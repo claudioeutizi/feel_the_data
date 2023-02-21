@@ -1,8 +1,8 @@
 const urlParams = new URLSearchParams(window.location.search);
 const city = urlParams.get('city');
 const myImage = new Image();
-
-myImage.src = cities.find(c => c.name === city).imgSrc;
+myImage.crossOrigin = "Anonymous";
+//myImage.src = "duomo.png";
 
 const epicStrings = [
     "As people, not only are we starting to see the impact",
@@ -26,6 +26,7 @@ let particleAngle = Math.PI;
 let particleVelocity = 0;
 let valpollution = 0;
 let valoriOttenuti = false;
+let imageGeneration = false;
 
 let loadingIndicator = document.getElementById("loading");
 
@@ -43,6 +44,81 @@ function random(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+//Every 5 seconds  val became true or false
+
+function setImage(OWdata){
+    
+    console.log(OWdata["pollution"].list[0].main.aqi);
+
+    switch (OWdata["pollution"].list[0].main.aqi) {
+        case 1:
+            pollutionString = "unpolluted, pure air, realistic";
+            break;
+        case 2:
+            pollutionString = "trees, realistic";
+            break;
+        case 3:
+            pollutionString = "realistic";
+            break;
+        case 4:
+            pollutionString = "slightly polluted";
+            break;
+        case 5: 
+            pollutionString = "very polluted";
+            break;
+        default:
+            break;
+    }
+
+    id = OWdata["weather"].weather[0].id;
+
+    if(id == 800){
+        //clear
+        weatherString = "in a sunny day";
+      } else if(id >= 200 && id <= 232){
+        //thunderstorm
+        weatherString = "in a thunderstorm";
+      } else if(id >= 500 && id <= 531){
+        //rain
+        weatherString = "in a rainy day";
+      } else if(id >= 600 && id <= 622){
+        //snow
+        weatherString = "in a snowy day";
+      } else if(id >= 701 && id <= 781){
+        //atmosphere
+        weatherString = "in a misty day";
+      } else if(id >= 300 && id <= 321){
+        //drizzle
+        weatherString = "in a drizzle";
+      } else if(id >= 801 && id <= 804){
+        //clouds
+        weatherString = "in a cloudy day";
+      }
+    
+      promptString = "a famous monument of " + city + " " + weatherString + " " + pollutionString;
+
+    dalleData = JSON.stringify({
+        prompt: promptString,
+        n: 1,
+        size: "1024x1024"
+      });
+    
+    imageGeneration = true;
+
+    postData('https://api.openai.com/v1/images/generations')
+    .then((data) => {
+        if(data != "error"){
+            myImage.src = data["data"][0]["url"];
+            console.log(data["data"][0]["url"]); // JSON data parsed by `data.json()` call
+        } else {
+            myImage.src = cities.find(c => c.name === city).imgSrc;
+        }
+        valoriOttenuti = true;
+        //la generazione/set dell'immagine fa partire musica e finire il caricamento
+        Tone.Transport.start();
+    });
+}
+
 function setGraphicParameters(data) {
     console.log("wind speed " + data["weather"].wind.speed);
     particleAngle = data["weather"].wind.deg * (Math.PI / 180);
@@ -55,38 +131,49 @@ function setGraphicParameters(data) {
     pm10 = data["pollution"].list[0].components.pm10;
     if (pm10 > 160) pm10 = 160;
     valpollution = mapValue(pm10, 0, 160, 0, 1);
-    console.log(valpollution);
-
+    console.log("perlin noise: " + valpollution);
+    
     no2 = data["pollution"].list[0].components.no2;
     if (no2 > 350) no2 = 350;
     filigrana = mapValue(no2, 0, 350, 0.5, 7);
-    console.log(filigrana);
-
-    Tone.Transport.start();
-
-    valoriOttenuti = true;
-    //loadingIndicator.textContent = "";
-    console.log("fine set graphic");
+    console.log("filigrana: " + filigrana);
+    
+    if(!imageGeneration) setImage(data);
 }
 
-myImage.addEventListener('load', function () {
-    const canvas = document.getElementById('canvas1');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth - 20;
-    canvas.height = window.innerHeight - 20;
+const canvas = document.getElementById('canvas1');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth - 20;
+canvas.height = window.innerHeight - 20;
 
-    ctx.drawImage(myImage, (canvas.width / 2) - (myImage.width / 2) - 25, 0, myImage.width, canvas.height);
+ctx.fillStyle = 'rgb(0, 0, 0, 50)';
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+ctx.globalAplha = 0.2;
+ctx.fill();
+
+ctx.fillStyle = "white";
+ctx.font = "30px Gloock";
+ctx.fillText(epicStrings[epics], (canvas.width / 2)-450, canvas.height / 2);
+ctx.fillText(epicStrings[epics+1], (canvas.width / 2)-400, canvas.height / 2 + 50);
+
+myImage.addEventListener('load', function () {
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fill();
+
+    ctx.drawImage(myImage, (canvas.width / 2) - (canvas.height / 2) - 25, 0, canvas.height, canvas.height);
     const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+    
     let particlesArray = [];
     //Max 10000, Min 1000
-    const numberOfParticles = 3000;
+    const numberOfParticles = 3500;
     let noise = new perlinNoise3d();
     let noiseValue = 0;
     let angle;
-
+    ctx.font = "24px Arial";
     let mappedImage = [];
+    let movement = 0;
 
     for (let y = 0; y < canvas.height; y++) {
         let row = [];
@@ -151,18 +238,17 @@ myImage.addEventListener('load', function () {
             this.velocity = particleVelocity * filigrana;//Math.random() ;
             this.size = Math.random() * 1.5 + dim;
 
-            let movement = (2.5 - this.speed) + this.velocity;
+            movement = (2.5 - this.speed) + this.velocity;
             this.angle++;
 
             this.x -= movement * Math.cos(angle + particleAngle);
             this.y -= movement * Math.sin(angle + particleAngle);
-
+            
 
             /* For vertical bottom-up movement */
             //this.y -= movement * Math.sin(particleAngle);// + Math.sin(this.angle)*20;
 
             if (this.y <= 0 || this.y >= canvas.height) {
-                //this.y = 0;
                 this.y = Math.random() * canvas.height;
                 this.x = Math.random() * canvas.width;
             }
@@ -180,9 +266,9 @@ myImage.addEventListener('load', function () {
         }
 
         draw() {
-            ctx.font = "24px Arial";
-
             if (valoriOttenuti) {
+                //ctx.drawImage(myImage,  (canvas.width / 2) - (canvas.height / 2) - 25, 0,0,canvas.height,canvas.height);
+
                 ctx.beginPath();
 
                 if ((mappedImage[this.position1]) &&
@@ -191,16 +277,6 @@ myImage.addEventListener('load', function () {
                 }
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * raggio);
                 ctx.fill();
-            } else {
-
-                ctx.fillStyle = "white";
-                
-                //ctx.fillText("As people, not only are we starting to see the impact", (canvas.width / 2) - 250, canvas.height / 2);
-                //ctx.fillText("of our actions on our planet, but it’s becoming impossible to deny it...", (canvas.width / 2) - 350, canvas.height / 2 + 50);
-
-                ctx.font = "30px Gloock";
-                ctx.fillText(epicStrings[epics], (canvas.width / 2)-450, canvas.height / 2);
-                ctx.fillText(epicStrings[epics+1], (canvas.width / 2)-400, canvas.height / 2 + 50);
             }
         }
     }
@@ -214,7 +290,6 @@ myImage.addEventListener('load', function () {
     init();
 
     function animate() {
-        //ctx.drawImage(myImage,0,0,canvas.width,canvas.height);
         ctx.globalAplha = 0.05;
         ctx.fillStyle = 'rgb(0, 0, 0, 0.05)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
