@@ -17,10 +17,16 @@ const epicStrings = [
 
 /*---------------------------------------------------------------------------------------*/
 var filigrana = 0;
-var dim = 3;
+//var dim = 3;
+var dim = 0.3;
 var raggio = 0.4;
 var val = true;
 var epics = 0;
+var biggo = true;
+
+var deltaTemp = 0;
+var deltaTempMax = 0;
+var deltaTempMin = 0;
 
 let particleAngle = Math.PI;
 let particleVelocity = 0;
@@ -29,6 +35,10 @@ let valoriOttenuti = false;
 let imageGeneration = false;
 
 let loadingIndicator = document.getElementById("loading");
+
+function roundTo5(num) {
+    return Math.round(num * 100000) / 100000;
+  }
 
 function getRandomValue(value1, value2, value3, value4) {
     const values = [value1, value2, value3, value4];
@@ -44,8 +54,18 @@ function random(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function tornaIndietro() {
-    window.history.back();
+function buccoliComanducci(min,max) {
+    if(biggo && dim <=max){
+        dim = dim + 0.00001;
+    }else if(biggo && dim > max){
+        biggo = false;
+        console.log(biggo);
+    } else if(!biggo && dim >=min){
+        dim = dim - 0.00001;
+    }else if(!biggo && dim < min){
+        biggo = true;
+        console.log(biggo);
+    }
   }
 
 function setImage(OWdata){
@@ -130,7 +150,18 @@ function setGraphicParameters(data) {
     particleVelocity = data["weather"].wind.speed;
 
     /* Dimension of particles depends on the weather: closer to max temperture means huge dimension */
-    dim = mapValue(data["weather"].main.temp,data["weather"].main.temp_min,data["weather"].main.temp_max,3,10);
+    
+    dim = roundTo5(mapValue(data["weather"].main.temp,data["weather"].main.temp_min,data["weather"].main.temp_max,1,30));
+    deltaTemp = Math.abs(roundTo5(mapValue(data["weather"].main.feels_like,data["weather"].main.temp_min,data["weather"].main.temp_max,1,30)));
+    deltaTempMax = dim + deltaTemp;
+    deltaTempMin = dim - deltaTemp;
+    if(deltaTempMax>30){deltaTempMax = 30;}
+    if(deltaTempMin<1){deltaTempMin = 1;}
+    
+
+    console.log("dim: "+dim+" "+deltaTemp+" "+deltaTempMin+" -- "+deltaTempMax);
+    /*------------------------------------------------------------------------------------------------*/
+    
 
     pm10 = data["pollution"].list[0].components.pm10;
     if (pm10 > 160) pm10 = 160;
@@ -262,6 +293,9 @@ myImage.addEventListener('load', function () {
 
 
         update() {
+
+            buccoliComanducci(deltaTempMin,deltaTempMax);
+
             this.position1 = Math.floor(this.y);
             this.position2 = Math.floor(this.x);
 
@@ -304,6 +338,7 @@ myImage.addEventListener('load', function () {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
             }
+
         }
 
         draw() {
