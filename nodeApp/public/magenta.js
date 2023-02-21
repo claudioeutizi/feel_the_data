@@ -28,6 +28,10 @@ const SAMPLE_SCALE = [
 ];
 const loopEvent = new Event("loopEvent");
 
+function randomIntFromInterval(min, max) { // min and max included 
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
 let Tone = mm.Player.tone;
 let musicData = {};
 
@@ -436,7 +440,7 @@ function changeBPM(value) {
   /*Tone.Transport.stop();
   Tone.Transport.bpm.value = value;
   Tone.Transport.start();*/
-  Tone.Transport.bpm.rampTo(value, 1);
+  // Tone.Transport.bpm.rampTo(value, 1);
 }
 
 //ritorna l'accordo secondo il piano valence-arousal di chatGPT
@@ -470,8 +474,8 @@ Promise.all([
       musicData = extractOWData(res);
       console.log("accordo1 " + musicData.chord);
       Promise.all([
-        generateSpace(0, musicData.chord, 0, musicData.chord, pollList),
-        generateSpace(0, musicData.chord, 0, musicData.chord, tempList)])
+        generateSpace(randomIntFromInterval(0, 12), musicData.chord, randomIntFromInterval(0, 12), musicData.chord, pollList),
+        generateSpace(randomIntFromInterval(0, 12), musicData.chord, randomIntFromInterval(0, 12), musicData.chord, tempList)])
         .then(() => {
           console.log("generata prima sequenza");
           pollList[0].on = true;
