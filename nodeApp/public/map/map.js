@@ -19,6 +19,7 @@ const mappa = new Mappa('MapboxGL', access_key);
 let myMap;
 var poiPoints = [];
 var data;
+var overCity = false;
 
 //
 function preload() {
@@ -33,6 +34,7 @@ function mouseClicked() {
     }
   }
 }
+
 
 var loaded = false;
 
@@ -55,10 +57,10 @@ function draw() {
   textFont('Gloock');
   text('Click on a city to Feel the Data!', 10, 30);
 
-
   if (loaded) {
     for (let i = 0; i < poiPoints.length; i++) {
       var pos = myMap.latLngToPixel(poiPoints[i].lat, poiPoints[i].lng);
+      fill(255);
       ellipse(pos.x, pos.y, myMap.zoom()*2, myMap.zoom()*2);
       poiPoints[i].updatePos(pos.x, pos.y, myMap.zoom());
       poiPoints[i].over(mouseX, mouseY, myMap.zoom());

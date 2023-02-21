@@ -195,12 +195,12 @@ myImage.addEventListener('load', function () {
 
                 ctx.fillStyle = "white";
                 
-                //.fillText("As people, not only are we starting to see the impact", (canvas.width / 2) - 250, canvas.height / 2);
+                //ctx.fillText("As people, not only are we starting to see the impact", (canvas.width / 2) - 250, canvas.height / 2);
                 //ctx.fillText("of our actions on our planet, but it’s becoming impossible to deny it...", (canvas.width / 2) - 350, canvas.height / 2 + 50);
 
                 ctx.font = "30px Gloock";
-                ctx.fillText(epicStrings[epics], (canvas.width / 2) - 250, canvas.height / 2);
-                ctx.fillText(epicStrings[epics+1], (canvas.width / 2) - 350, canvas.height / 2 + 50);
+                ctx.fillText(epicStrings[epics], (canvas.width / 2)-450, canvas.height / 2);
+                ctx.fillText(epicStrings[epics+1], (canvas.width / 2)-400, canvas.height / 2 + 50);
             }
         }
     }

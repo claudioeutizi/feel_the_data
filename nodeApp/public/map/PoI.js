@@ -13,14 +13,19 @@ class PoI {
     let d = dist(px, py, this.x, this.y);
     if (d < this.w + 5) {
       this.y = this.y - 10;
-      textSize(24);
+      textSize(25);
+      textFont('Gloock');
       fill(150);
       stroke(255);
       ellipse(px, py, zoom*10, zoom*10);
-      text(this.place, this.x + 15, this.y);
+      text(this.place, this.x + 10, this.y);
       if (this.isSelected(px, py, zoom)) {
         selectedPoI = this;
       }
+    }else{
+      /* For "Click on a city to Feel the Data!" font */
+      textFont('Gloock');
+      stroke(0);
     }
   }
 
@@ -30,7 +35,7 @@ class PoI {
       return true;
     } else {
       return false;
-    }
+    }   
 }
 
   show() {
@@ -47,6 +52,7 @@ class PoI {
     let d = dist(px, py, this.x, this.y);
     return d < (this.w + 5) * zoom;
   }
+  
 
   updatePos(_x, _y, _zoom) {
     //adjust if map is moved
