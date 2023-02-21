@@ -13,7 +13,7 @@ const epicStrings = [
     "our entire species and we need to work collectively together and stop procrastinating.",
     "We don’t have time to sit on our hands as our planet burns. For young people,",
     " climate change is bigger than election or re-election. It’s life or death."
-]
+];
 
 /*---------------------------------------------------------------------------------------*/
 var filigrana = 0;
@@ -37,7 +37,6 @@ function getRandomValue(value1, value2, value3, value4) {
 
 /* Selection of strings to print out */
 epics = getRandomValue(0,2,4,6);
-console.log(epics);
 
 /*Function that returns a random value between min number and max number*/
 function random(min, max) {
@@ -199,6 +198,7 @@ myImage.addEventListener('load', function () {
                 //.fillText("As people, not only are we starting to see the impact", (canvas.width / 2) - 250, canvas.height / 2);
                 //ctx.fillText("of our actions on our planet, but it’s becoming impossible to deny it...", (canvas.width / 2) - 350, canvas.height / 2 + 50);
 
+                ctx.font = "30px Gloock";
                 ctx.fillText(epicStrings[epics], (canvas.width / 2) - 250, canvas.height / 2);
                 ctx.fillText(epicStrings[epics+1], (canvas.width / 2) - 350, canvas.height / 2 + 50);
             }

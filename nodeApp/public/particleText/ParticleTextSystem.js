@@ -9,6 +9,8 @@ let buttonWidth = 80;
 let buttonHeight = 40;
 let button;
 
+var showStartButton = 3000; //Milliseconds
+
 function preload() {
     font = loadFont('./../Gloock.ttf');
 }
@@ -39,12 +41,16 @@ function setup() {
     noStroke();
     startTime = millis();
 
-    button = createButton('START');
-    button.id('play-button')
-    button.position(windowWidth/2 - 100, windowHeight - windowHeight/4);
-    button.style('font-family','Gloock');
-    button.style('letter-spacing', 2);
-    button.mousePressed();
+    /* Function for draw the start button after showStartButton milliseconds */
+    setTimeout(() => {
+            button = createButton('START');
+            button.id('play-button')
+            button.position(windowWidth/2 - 100, windowHeight - windowHeight/4);
+            button.style('font-family','Gloock');
+            button.style('letter-spacing', 2);
+            button.mousePressed();
+            
+        }, showStartButton);
 }
 
 function mousePressed(){
@@ -55,12 +61,15 @@ function draw() {
     noStroke();
     background(27, 24, 24);
 
+    
+
     let elapsedTime = millis() - startTime;
 
     let targetAlpha = elapsedTime >= 600 ? 255 : 0;
     let transparency = lerp(0, targetAlpha, (elapsedTime - 600) / 1000);
     transparency = constrain(transparency, 0, 255);
     fill(250, transparency);
+    
 
     let jiggle = map(elapsedTime, 2000, 0, 1, 300, true);
     translate((width - abs(titleBounds.w)) / 2,
