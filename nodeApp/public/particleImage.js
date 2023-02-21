@@ -44,7 +44,9 @@ function random(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-//Every 5 seconds  val became true or false
+function tornaIndietro() {
+    window.history.back();
+  }
 
 function setImage(OWdata){
     
@@ -145,6 +147,21 @@ const canvas = document.getElementById('canvas1');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth - 20;
 canvas.height = window.innerHeight - 20;
+
+/*
+// Creazione del bottone all'interno di un canvas
+var buttonBack = document.getElementById('canvas1');
+var context = buttonBack.getContext('2d');
+
+context.fillStyle = "blue";
+context.fillRect(50, 50, 100, 50);
+
+context.font = "20px Arial";
+context.fillStyle = "white";
+context.fillText("Torna indietro", 60, 85);
+buttonBack.addEventListener("click", tornaIndietro);
+*/
+
 
 ctx.fillStyle = 'rgb(0, 0, 0, 50)';
 ctx.fillRect(0, 0, canvas.width, canvas.height);
