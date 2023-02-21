@@ -109,11 +109,13 @@ function setImage(OWdata){
 
     postData('https://api.openai.com/v1/images/generations')
     .then((data) => {
-        if(data != "error"){
-            myImage.src = data["data"][0]["url"];
-            console.log(data["data"][0]["url"]); // JSON data parsed by `data.json()` call
+        console.log(data.error);
+        if(data.error){
+            console.log("Error loading image");
+            myImage.src = "./images/" + city + ".jpg";
         } else {
-            myImage.src = cities.find(c => c.name === city).imgSrc;
+            myImage.src = data["data"][0]["url"];
+            console.log("URL retrieved: " + data["data"][0]["url"]); // JSON data parsed by `data.json()` call
         }
         valoriOttenuti = true;
         //la generazione/set dell'immagine fa partire musica e finire il caricamento
@@ -134,7 +136,7 @@ function setGraphicParameters(data) {
     if (pm10 > 160) pm10 = 160;
     valpollution = mapValue(pm10, 0, 160, 0, 1);
     console.log("perlin noise: " + valpollution);
-    
+
     no2 = data["pollution"].list[0].components.no2;
     if (no2 > 350) no2 = 350;
     filigrana = mapValue(no2, 0, 350, 0.5, 7);
@@ -161,6 +163,7 @@ context.fillStyle = "white";
 context.fillText("Torna indietro", 60, 85);
 buttonBack.addEventListener("click", tornaIndietro);
 */
+
 
 
 ctx.fillStyle = 'rgb(0, 0, 0, 50)';
