@@ -49,6 +49,22 @@
     {
       "type": "Feature",
       "properties": {
+        "short_code": "MX-CMX",
+        "wikidata": "Q1489",
+        "place_name": "Mexico City, Mexico"
+      },
+      "geometry": {
+        "coordinates": [
+          -99.133178,
+          19.432629
+        ],
+        "type": "Point"
+      },
+      "id": "place.17567"
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "wikidata": "Q60",
         "place_name": "New York, United States"
       },
@@ -110,6 +126,22 @@
     {
       "type": "Feature",
       "properties": {
+        "short_code": "RO-B",
+        "wikidata": "Q19660",
+        "place_name": "Bucharest, Romania"
+      },
+      "geometry": {
+        "coordinates": [
+          26.10272,
+          44.436141
+        ],
+        "type": "Point"
+      },
+      "id": "place.337088"
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "wikidata": "Q2807",
         "place_name": "Madrid, Spain"
       },
@@ -156,6 +188,36 @@
     {
       "type": "Feature",
       "properties": {
+        "wikidata": "Q1930",
+        "place_name": "Ottawa, Canada"
+      },
+      "geometry": {
+        "coordinates": [
+          -75.690057,
+          45.421143
+        ],
+        "type": "Point"
+      },
+      "id": "place.56100903"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "wikidata": "Q1761",
+        "place_name": "Dublin, Ireland"
+      },
+      "geometry": {
+        "coordinates": [
+          -6.260296,
+          53.3498
+        ],
+        "type": "Point"
+      },
+      "id": "place.66664"
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "wikidata": "Q5465",
         "place_name": "Cape Town, South Africa"
       },
@@ -172,7 +234,7 @@
       "type": "Feature",
       "properties": {
         "wikidata": "Q84",
-        "place_name": "London, England"
+        "place_name": "London, United Kingdom"
       },
       "geometry": {
         "coordinates": [
@@ -230,6 +292,22 @@
         "type": "Point"
       },
       "id": "region.754800"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "short_code": "JP-26",
+        "wikidata": "Q120730",
+        "place_name": "Kyoto, Japan"
+      },
+      "geometry": {
+        "coordinates": [
+          135.621612,
+          35.254365
+        ],
+        "type": "Point"
+      },
+      "id": "region.83060"
     }
   ],
   "type": "FeatureCollection"
