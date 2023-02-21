@@ -338,13 +338,11 @@ function mainProcess() {
     newMusicData = extractOWData(res);
     let pollList2 = [];
     let tempList2 = [];
-    console.log("new poll " + newMusicData.pollution_chord);
-    console.log("old poll " + musicData.pollution_chord);
-    console.log("new weather " + newMusicData.weather_chord);
-    console.log("old weather " + musicData.weather_chord);
+    console.log("new poll " + newMusicData.chord);
+    console.log("old poll " + musicData.chord);
     Promise.all([
-      generateSpace(0, musicData.pollution_chord, 0, newMusicData.pollution_chord, pollList2),
-      generateSpace(0, musicData.weather_chord, 0, newMusicData.weather_chord, tempList2)])
+      generateSpace(0, musicData.chord, 0, newMusicData.chord, pollList2),
+      generateSpace(0, musicData.chord, 0, newMusicData.chord, tempList2)])
       .then(() => {
         musicData = newMusicData;
         i = 0;
@@ -390,8 +388,9 @@ function extractOWData(data) {
 
   console.log("weather" + data["weather"].weather[0].id);
   return {
-    pollution_chord: valuesToChords(valence, arousal),
-    weather_chord: weatherToChords(data["weather"].weather[0].id)
+    chord: valuesToChords(
+      mapValue(data["pollution"].list[0].main.aqi, 5, 1, -1, 1),
+      weatherToArousal(data["weather"].weather[0].id)),
   }
 }
 
@@ -409,15 +408,15 @@ function weatherToArousal(id) {
   } else if (id >= 200 && id <= 232) {
     //thunderstorm
     changeBPM(120);
-    return mapValue(id, 200, 232, ((2 / 3) - 0.0001), 1);
+    return mapValue(id, 200, 232, ((2 / 3) + 0.0001), (1 - 0.0001));
   } else if (id >= 500 && id <= 531) {
     //rain
     changeBPM(50);
-    return mapValue(id, 500, 531, 0 - 0.0001, (-2 / 3));
+    return mapValue(id, 500, 531, (0 + 0.0001), (1 / 3));
   } else if (id >= 600 && id <= 622) {
     //snow
     changeBPM(70);
-    return mapValue(id, 600, 622, ((1 / 3) - 0.0001), (2 / 3));
+    return mapValue(id, 600, 622, ((1 / 3) + 0.0001), (2 / 3));
   } else if (id >= 701 && id <= 781) {
     //atmosphere
     changeBPM(60);
@@ -469,11 +468,10 @@ Promise.all([
   .then(() => {
     mainOpenWeather().then(res => {
       musicData = extractOWData(res);
-      console.log("accordo1 " + musicData.pollution_chord);
-      console.log("accordo2 " + musicData.weather_chord);
+      console.log("accordo1 " + musicData.chord);
       Promise.all([
-        generateSpace(0, musicData.pollution_chord, 0, musicData.pollution_chord, pollList),
-        generateSpace(0, musicData.weather_chord, 0, musicData.weather_chord, tempList)])
+        generateSpace(0, musicData.chord, 0, musicData.chord, pollList),
+        generateSpace(0, musicData.chord, 0, musicData.chord, tempList)])
         .then(() => {
           console.log("generata prima sequenza");
           pollList[0].on = true;
