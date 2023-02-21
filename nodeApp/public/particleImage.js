@@ -132,7 +132,10 @@ function setImage(OWdata){
         console.log(data.error);
         if(data.error){
             console.log("Error loading image");
+            
+            console.log("./images/" + city + ".jpg");
             myImage.src = "./images/" + city + ".jpg";
+            console.log(myImage);
         } else {
             myImage.src = data["data"][0]["url"];
             console.log("URL retrieved: " + data["data"][0]["url"]); // JSON data parsed by `data.json()` call
@@ -151,17 +154,18 @@ function setGraphicParameters(data) {
 
     /* Dimension of particles depends on the weather: closer to max temperture means huge dimension */
     
-    dim = roundTo5(mapValue(data["weather"].main.temp,data["weather"].main.temp_min,data["weather"].main.temp_max,1,30));
+    dim = roundTo5(mapValue(data["weather"].main.temp, data["weather"].main.temp_min, data["weather"].main.temp_max, 1, 30));
     deltaTemp = Math.abs(roundTo5(mapValue(data["weather"].main.feels_like,data["weather"].main.temp_min,data["weather"].main.temp_max,1,30)));
     deltaTempMax = dim + deltaTemp;
     deltaTempMin = dim - deltaTemp;
+    console.log("Delta temp " + deltaTemp);
     if(deltaTempMax>30){deltaTempMax = 30;}
     if(deltaTempMin<1){deltaTempMin = 1;}
     
-
+    console.log("MIN TEMP " + data["weather"].main.temp_min);
+    console.log("MIN TEMP " + data["weather"].main.temp_max);
     console.log("dim: "+dim+" "+deltaTemp+" "+deltaTempMin+" -- "+deltaTempMax);
     /*------------------------------------------------------------------------------------------------*/
-    
 
     pm10 = data["pollution"].list[0].components.pm10;
     if (pm10 > 160) pm10 = 160;
@@ -194,8 +198,6 @@ context.fillStyle = "white";
 context.fillText("Torna indietro", 60, 85);
 buttonBack.addEventListener("click", tornaIndietro);
 */
-
-
 
 ctx.fillStyle = 'rgb(0, 0, 0, 50)';
 ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -385,6 +387,7 @@ myImage.addEventListener('load', function () {
             particlesArray[i].update();
             particlesArray[i].draw();
         }
+
         requestAnimationFrame(animate);
 
     }

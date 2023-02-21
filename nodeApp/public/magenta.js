@@ -10,7 +10,11 @@ const CHORD_SYMBOLS = {
   minor7th: 'm7',
   dominant7th: '7',
   sus2: 'Msus2',
-  sus4: 'Msus4'
+  sus4: 'Msus4',
+  diminished: 'o',
+  halfDiminished: 'm7b5',
+  add9: 'add9',
+  major7thaug11: 'M7#11'
 };
 const SAMPLE_SCALE = [
   'C3',
@@ -34,6 +38,7 @@ function randomIntFromInterval(min, max) { // min and max included
 
 let Tone = mm.Player.tone;
 let musicData = {};
+let rootNote = 0;
 
 Tone.Transport.bpm.value = 80;
 
@@ -345,8 +350,8 @@ function mainProcess() {
     console.log("new poll " + newMusicData.chord);
     console.log("old poll " + musicData.chord);
     Promise.all([
-      generateSpace(0, musicData.chord, 0, newMusicData.chord, pollList2),
-      generateSpace(0, musicData.chord, 0, newMusicData.chord, tempList2)])
+      generateSpace(rootNote, musicData.chord, rootNote, newMusicData.chord, pollList2),
+      generateSpace(rootNote, musicData.chord, rootNote, newMusicData.chord, tempList2)])
       .then(() => {
         musicData = newMusicData;
         i = 0;
@@ -380,39 +385,57 @@ function eventFunction() {
 }
 
 function extractOWData(data) {
-  no2 = data["pollution"].list[0].components.no2;
-  if (no2 > 350) no2 = 350;
-  valence = mapValue(no2, 0, 350, 1, -1);
+  valence = mapValue(data["pollution"].list[0].main.aqi, 5, 1, -1, 1);
+  arousal = weatherToArousal(data["weather"].weather[0].id);
+  //no2 = data["pollution"].list[0].components.no2;
+  //if (no2 > 350) no2 = 350;
+  //valence = mapValue(no2, 0, 350, 1, -1);
   console.log("valence: " + valence);
+  console.log("pollution " + data["pollution"].list[0].main.aqi);
 
-  pm10 = data["pollution"].list[0].components.pm10;
-  if (pm10 > 180) pm10 = 180;
-  arousal = mapValue(pm10, 0, 180, -1, 1);
+  //pm10 = data["pollution"].list[0].components.pm10;
+  //if (pm10 > 180) pm10 = 180;
+  //arousal = mapValue(pm10, 0, 180, -1, 1);
   console.log("arousal: " + arousal);
 
-  console.log("weather" + data["weather"].weather[0].id);
+  console.log("weather " + data["weather"].weather[0].id);
   return {
     chord: valuesToChords(
-      mapValue(data["pollution"].list[0].main.aqi, 5, 1, -1, 1),
-      weatherToArousal(data["weather"].weather[0].id)),
+      valence,
+      arousal)
   }
 }
 
+function testvaluestochords(){
+  valence = mapValue(5, 5, 1, -1, 1);
+  arousal = weatherToArousal(800);
+  console.log("min " + valuesToChords(valence, arousal));
+  valence = mapValue(1, 5, 1, -1, 1);
+  arousal = weatherToArousal(800);
+  console.log("maj " + valuesToChords(valence, arousal));
+}
+
 function mapValue(value, fromMin, fromMax, toMin, toMax) {
-  var proportion = (value - fromMin) / (fromMax - fromMin);
-  var outputValue = (proportion * (toMax - toMin)) + toMin;
-  return outputValue;
+  if(fromMax - fromMin == 0){
+    //caso divisione per 0
+    return (toMin + toMax /2);
+  } else {
+    var proportion = (value - fromMin) / (fromMax - fromMin);
+    console.log("proportion : " + proportion + "fromMin " + fromMin + "fromMax " + fromMax + "toMin "+ toMin + "toMax " + toMax + "value " + value);
+    var outputValue = (proportion * (toMax - toMin)) + toMin;
+    return outputValue;
+  }
 }
 
 function weatherToArousal(id) {
   if (id == 800) {
     //clear
     changeBPM(50);
-    return 1;
+    return -1;
   } else if (id >= 200 && id <= 232) {
     //thunderstorm
     changeBPM(120);
-    return mapValue(id, 200, 232, ((2 / 3) + 0.0001), (1 - 0.0001));
+    return mapValue(id, 200, 232, ((2 / 3) + 0.0001), 1);
   } else if (id >= 500 && id <= 531) {
     //rain
     changeBPM(50);
@@ -432,7 +455,7 @@ function weatherToArousal(id) {
   } else if (id >= 801 && id <= 804) {
     //clouds
     changeBPM(55);
-    return mapValue(id, 801, 804, ((-2 / 3) + 0.0001), (1 / 3));
+    return mapValue(id, 801, 804, ((-2 / 3) + 0.0001), -(1 / 3));
   }
 }
 
@@ -440,29 +463,46 @@ function changeBPM(value) {
   /*Tone.Transport.stop();
   Tone.Transport.bpm.value = value;
   Tone.Transport.start();*/
-  // Tone.Transport.bpm.rampTo(value, 1);
+  console.log("BPM " + value);
+  stopTransportPlay();
+  Tone.Transport.bpm.rampTo(value, 1);
+  startTransportPlay();
 }
 
 //ritorna l'accordo secondo il piano valence-arousal di chatGPT
 //funzione testata
 function valuesToChords(val, ar) {
-  if (val >= 0 && ar < 0) {
+  //clear
+  if ((val <= 1 && val >= 0.5) && (ar == -1)) {
     return CHORD_SYMBOLS['major'];
-  } else if (val >= 0.5 && ar >= 0) {
-    return CHORD_SYMBOLS['major7th'];
-  } else if ((val < 0.5 && val >= -0.5) && (ar >= 0 && ar < 0.75)) {
-    return CHORD_SYMBOLS['sus2'];
-  } else if ((val < 0.5 && val >= -0.5) && (ar >= 0.75)) {
-    return CHORD_SYMBOLS['sus4'];
-  } else if ((val < -0.5) && (ar >= 0 && ar < 0.5)) {
+  } else if ((val < 0.5 && val > -0.5) && (ar == -1)) {
     return CHORD_SYMBOLS['dominant7th'];
-  } else if ((val < -0.5) && (ar >= 0.5)) {
-    return CHORD_SYMBOLS['minor7th'];
-  } else if ((val < 0) && (ar < 0)) {
+  } else if ((val <= -0.5 && val >= -1) && (ar == -1)) {
     return CHORD_SYMBOLS['minor'];
+  } 
+  //mid-low arousal (atmosphere - rain)
+  else if ((val <= 1 && val >= 0.5) && (ar > -1 && ar <= -(1/3))) {
+    return CHORD_SYMBOLS['major7th'];
+  } else if ((val < 0.5 && val > -0.5) && (ar > -1 && ar <= 0)){
+    return CHORD_SYMBOLS['sus2'];
+  } else if ((val <= -0.5 && val >= -1) && (ar > -1 && ar <= -(1/3))){
+    return CHORD_SYMBOLS['minor7th'];
+  }
+  //mid-high arousal
+  else if ((val <= 1 && val >= 0.5) && (ar > -(1/3) && ar <= (2/3))) {
+    return CHORD_SYMBOLS['add9'];
+  } else if ((val < 0.5 && val > -0.5) && (ar > 0 && ar <= 1)){
+    return CHORD_SYMBOLS['sus4'];
+  } else if ((val <= -0.5 && val >= -1) && (ar > -(1/3) && ar <= (2/3))){
+    return CHORD_SYMBOLS['halfDiminished'];
+  }
+  //high arousal
+  else if ((val <= 1 && val >= 0.5) && (ar > (2/3) && ar <= 1)) {
+    return CHORD_SYMBOLS['major7thaug11'];
+  } else if ((val <= -0.5 && val >= -1) && (ar > (2/3) && ar <= 1)){
+    return CHORD_SYMBOLS['diminished'];
   }
 }
-
 
 Promise.all([
   rnn.initialize(),
@@ -472,10 +512,11 @@ Promise.all([
   .then(() => {
     mainOpenWeather().then(res => {
       musicData = extractOWData(res);
+      rootNote = randomIntFromInterval(0, 12);
       console.log("accordo1 " + musicData.chord);
       Promise.all([
-        generateSpace(randomIntFromInterval(0, 12), musicData.chord, randomIntFromInterval(0, 12), musicData.chord, pollList),
-        generateSpace(randomIntFromInterval(0, 12), musicData.chord, randomIntFromInterval(0, 12), musicData.chord, tempList)])
+        generateSpace(rootNote, musicData.chord, rootNote, musicData.chord, pollList),
+        generateSpace(rootNote, musicData.chord, rootNote, musicData.chord, tempList)])
         .then(() => {
           console.log("generata prima sequenza");
           pollList[0].on = true;
