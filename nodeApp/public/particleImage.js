@@ -109,11 +109,12 @@ function setImage(OWdata){
 
     postData('https://api.openai.com/v1/images/generations')
     .then((data) => {
-        if(data != "error"){
+        if(data["data"][0]["url"] === "undefined"){
+            console.log("Error loading image");
+            myImage.src = city + ".jpg";
+        } else {
             myImage.src = data["data"][0]["url"];
             console.log(data["data"][0]["url"]); // JSON data parsed by `data.json()` call
-        } else {
-            myImage.src = cities.find(c => c.name === city).imgSrc;
         }
         valoriOttenuti = true;
         //la generazione/set dell'immagine fa partire musica e finire il caricamento
@@ -134,7 +135,7 @@ function setGraphicParameters(data) {
     if (pm10 > 160) pm10 = 160;
     valpollution = mapValue(pm10, 0, 160, 0, 1);
     console.log("perlin noise: " + valpollution);
-    
+
     no2 = data["pollution"].list[0].components.no2;
     if (no2 > 350) no2 = 350;
     filigrana = mapValue(no2, 0, 350, 0.5, 7);
