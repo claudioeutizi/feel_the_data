@@ -109,12 +109,13 @@ function setImage(OWdata){
 
     postData('https://api.openai.com/v1/images/generations')
     .then((data) => {
-        if(data["data"][0]["url"] === "undefined"){
+        console.log(data.error);
+        if(data.error){
             console.log("Error loading image");
-            myImage.src = city + ".jpg";
+            myImage.src = "./images/" + city + ".jpg";
         } else {
             myImage.src = data["data"][0]["url"];
-            console.log(data["data"][0]["url"]); // JSON data parsed by `data.json()` call
+            console.log("URL retrieved: " + data["data"][0]["url"]); // JSON data parsed by `data.json()` call
         }
         valoriOttenuti = true;
         //la generazione/set dell'immagine fa partire musica e finire il caricamento
