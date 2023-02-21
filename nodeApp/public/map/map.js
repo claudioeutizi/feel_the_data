@@ -54,6 +54,7 @@ function draw() {
 
   textSize(28);
   fill(255, 255, 255, 70);
+  stroke(255);
   textFont('Gloock');
   text('Click on a city to Feel the Data!', 10, 30);
 

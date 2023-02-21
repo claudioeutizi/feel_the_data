@@ -164,6 +164,7 @@ buttonBack.addEventListener("click", tornaIndietro);
 */
 
 
+
 ctx.fillStyle = 'rgb(0, 0, 0, 50)';
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 ctx.globalAplha = 0.2;
