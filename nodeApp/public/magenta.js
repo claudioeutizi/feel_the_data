@@ -33,8 +33,8 @@ let musicData = {};
 
 Tone.Transport.bpm.value = 80;
 
-let vae = new mm.MusicVAE( 'https://storage.googleapis.com/download.magenta.tensorflow.org/tfjs_checkpoints/music_vae/mel_2bar_small');
-let rnn = new mm.MusicRNN( 'https://storage.googleapis.com/download.magenta.tensorflow.org/tfjs_checkpoints/music_rnn/chord_pitches_improv');
+let vae = new mm.MusicVAE('https://storage.googleapis.com/download.magenta.tensorflow.org/tfjs_checkpoints/music_vae/mel_2bar_small');
+let rnn = new mm.MusicRNN('https://storage.googleapis.com/download.magenta.tensorflow.org/tfjs_checkpoints/music_rnn/chord_pitches_improv');
 
 let reverb = new Tone.Convolver(
   'https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/hm2_000_ortf_48k.mp3'
@@ -82,7 +82,7 @@ let currentMidiOutput;
 let transportPlayerId = null;
 let wait_time = 4000;
 let loopRestarted = 0;
-var check = {restarted: 0};
+var check = { restarted: 0 };
 let pollList = [];
 let tempList = [];
 let div = document.createElement('div');
@@ -199,14 +199,14 @@ function playStep(time = Tone.now() - Tone.context.lookAhead) {
       if (delay === 0) velocity = 'high';
       else if (delay === sixteenth / 2) velocity = 'mid';
       else velocity = 'low';
-      
+
       stepSamplers[voice++ % stepSamplers.length][velocity].triggerAttack(
         freq,
         playTime
       );
     }
   }
-  if(currentStep % SEQ_LENGTH == 0){
+  if (currentStep % SEQ_LENGTH == 0) {
     loopRestarted++;
     div.dispatchEvent(loopEvent);
   }
@@ -271,35 +271,35 @@ function buildSeed(chord) {
 }
 
 function generateSpace(tonicLeft, chordLeft, tonicRight, chordRight, seqList) {
-    let chords = [
-      mountChord(octaveShift(MIN_NOTE + tonicLeft), chordLeft),
-      mountChord(MIN_NOTE + tonicLeft, chordLeft),
-      mountChord(octaveShift(MIN_NOTE + tonicRight), chordRight),
-      mountChord(MIN_NOTE + tonicRight, chordRight)
-    ];
-    return Promise.all([
-      generateSeq(chords[0], buildSeed(chords[0])),
-      //generateSeq(chords[1], buildSeed(chords[1])),
-      generateSeq(chords[2], buildSeed(chords[2])),
-      //generateSeq(chords[3], buildSeed(chords[3]))
-    ])
-      .then(noteSeqs => vae.interpolate(noteSeqs, N_INTERPOLATIONS))
-      .then(res => {
-        sequences = res.map((noteSeq, idx) => {
+  let chords = [
+    mountChord(octaveShift(MIN_NOTE + tonicLeft), chordLeft),
+    mountChord(MIN_NOTE + tonicLeft, chordLeft),
+    mountChord(octaveShift(MIN_NOTE + tonicRight), chordRight),
+    mountChord(MIN_NOTE + tonicRight, chordRight)
+  ];
+  return Promise.all([
+    generateSeq(chords[0], buildSeed(chords[0])),
+    //generateSeq(chords[1], buildSeed(chords[1])),
+    generateSeq(chords[2], buildSeed(chords[2])),
+    //generateSeq(chords[3], buildSeed(chords[3]))
+  ])
+    .then(noteSeqs => vae.interpolate(noteSeqs, N_INTERPOLATIONS))
+    .then(res => {
+      sequences = res.map((noteSeq, idx) => {
 
-          let notes = new Map();
-          for ({ pitch, quantizedStartStep, quantizedEndStep } of noteSeq.notes) {
-            if (!isValidNote(pitch, 4)) {
-              continue;
-            }
-            notes.set(quantizedStartStep, {
-              pitch,
-            });
+        let notes = new Map();
+        for ({ pitch, quantizedStartStep, quantizedEndStep } of noteSeq.notes) {
+          if (!isValidNote(pitch, 4)) {
+            continue;
           }
+          notes.set(quantizedStartStep, {
+            pitch,
+          });
+        }
 
-          let seqObj = { notes, on: false };
-          seqList.push(seqObj);
-          return seqObj;
+        let seqObj = { notes, on: false };
+        seqList.push(seqObj);
+        return seqObj;
       });
     });
 }
@@ -329,7 +329,7 @@ function stopTransportPlay() {
   }
 }
 
-function mainProcess(){
+function mainProcess() {
   console.log("main process");
   //Chiamata OW
   mainOpenWeather().then(res => {
@@ -343,48 +343,48 @@ function mainProcess(){
     console.log("new weather " + newMusicData.weather_chord);
     console.log("old weather " + musicData.weather_chord);
     Promise.all([
-      generateSpace(0,musicData.pollution_chord, 0, newMusicData.pollution_chord, pollList2), 
-      generateSpace(0,musicData.weather_chord, 0, newMusicData.weather_chord, tempList2)])
+      generateSpace(0, musicData.pollution_chord, 0, newMusicData.pollution_chord, pollList2),
+      generateSpace(0, musicData.weather_chord, 0, newMusicData.weather_chord, tempList2)])
       .then(() => {
         musicData = newMusicData;
         i = 0;
         pollList = pollList2;
         tempList = tempList2;
-        
+
         pollList[0].on = true;
         tempList[0].on = true;
 
         div.addEventListener("loopEvent", eventFunction)
-    })
-    
+      })
+
   });
 }
 
-function eventFunction(){
-  if(pollList[i].on == false){
-    pollList[i-1].on = false;
+function eventFunction() {
+  if (pollList[i].on == false) {
+    pollList[i - 1].on = false;
     pollList[i].on = true;
   }
-  if(tempList[i].on == false){
-    tempList[i-1].on = false;
+  if (tempList[i].on == false) {
+    tempList[i - 1].on = false;
     tempList[i].on = true;
   }
   i++;
-  if(i >= N_INTERPOLATIONS){
+  if (i >= N_INTERPOLATIONS) {
     console.log("end");
     div.removeEventListener("loopEvent", eventFunction);
     setTimeout(mainProcess, wait_time);
   }
 }
 
-function extractOWData(data){
+function extractOWData(data) {
   no2 = data["pollution"].list[0].components.no2;
-  if(no2 > 350) no2 = 350;
+  if (no2 > 350) no2 = 350;
   valence = mapValue(no2, 0, 350, 1, -1);
   console.log("valence: " + valence);
 
   pm10 = data["pollution"].list[0].components.pm10;
-  if(pm10 > 180) pm10 = 180;
+  if (pm10 > 180) pm10 = 180;
   arousal = mapValue(pm10, 0, 180, -1, 1);
   console.log("arousal: " + arousal);
 
@@ -401,39 +401,39 @@ function mapValue(value, fromMin, fromMax, toMin, toMax) {
   return outputValue;
 }
 
-function weatherToChords(id){
-  if(id == 800){
+function weatherToArousal(id) {
+  if (id == 800) {
     //clear
     changeBPM(50);
-    return CHORD_SYMBOLS['major'];
-  } else if(id >= 200 && id <= 232){
+    return 1;
+  } else if (id >= 200 && id <= 232) {
     //thunderstorm
     changeBPM(120);
-    return CHORD_SYMBOLS["minor7th"];
-  } else if(id >= 500 && id <= 531){
+    return mapValue(id, 200, 232, ((2 / 3) - 0.0001), 1);
+  } else if (id >= 500 && id <= 531) {
     //rain
     changeBPM(50);
-    return CHORD_SYMBOLS["minor"];
-  } else if(id >= 600 && id <= 622){
+    return mapValue(id, 500, 531, 0 - 0.0001, (-2 / 3));
+  } else if (id >= 600 && id <= 622) {
     //snow
     changeBPM(70);
-    return CHORD_SYMBOLS["sus2"];
-  } else if(id >= 701 && id <= 781){
+    return mapValue(id, 600, 622, ((1 / 3) - 0.0001), (2 / 3));
+  } else if (id >= 701 && id <= 781) {
     //atmosphere
     changeBPM(60);
-    return CHORD_SYMBOLS["sus4"];
-  } else if(id >= 300 && id <= 321){
+    return mapValue(id, 701, 781, (-1 + 0.0001), (-2 / 3));
+  } else if (id >= 300 && id <= 321) {
     //drizzle
     changeBPM(90);
-    return CHORD_SYMBOLS["major7th"];
-  } else if(id >= 801 && id <= 804){
+    return mapValue(id, 300, 321, (((-1 / 3) + 0.0001)), 0);
+  } else if (id >= 801 && id <= 804) {
     //clouds
     changeBPM(55);
-    return CHORD_SYMBOLS["dominant7th"];
+    return mapValue(id, 801, 804, ((-2 / 3) + 0.0001), (1 / 3));
   }
 }
 
-function changeBPM(value){
+function changeBPM(value) {
   /*Tone.Transport.stop();
   Tone.Transport.bpm.value = value;
   Tone.Transport.start();*/
@@ -442,20 +442,20 @@ function changeBPM(value){
 
 //ritorna l'accordo secondo il piano valence-arousal di chatGPT
 //funzione testata
-function valuesToChords(val, ar){
-  if(val >= 0 && ar < 0){
+function valuesToChords(val, ar) {
+  if (val >= 0 && ar < 0) {
     return CHORD_SYMBOLS['major'];
-  } else if (val >= 0.5 && ar>=0){
+  } else if (val >= 0.5 && ar >= 0) {
     return CHORD_SYMBOLS['major7th'];
-  } else if ((val < 0.5 && val >= -0.5) && (ar >= 0 && ar < 0.75)){
+  } else if ((val < 0.5 && val >= -0.5) && (ar >= 0 && ar < 0.75)) {
     return CHORD_SYMBOLS['sus2'];
-  } else if ((val < 0.5 && val >= -0.5) && (ar >= 0.75)){
+  } else if ((val < 0.5 && val >= -0.5) && (ar >= 0.75)) {
     return CHORD_SYMBOLS['sus4'];
-  } else if ((val < -0.5) && (ar >= 0 && ar < 0.5)){
+  } else if ((val < -0.5) && (ar >= 0 && ar < 0.5)) {
     return CHORD_SYMBOLS['dominant7th'];
-  } else if ((val < -0.5) && (ar >= 0.5)){
+  } else if ((val < -0.5) && (ar >= 0.5)) {
     return CHORD_SYMBOLS['minor7th'];
-  } else if ((val < 0) && (ar < 0)){
+  } else if ((val < 0) && (ar < 0)) {
     return CHORD_SYMBOLS['minor'];
   }
 }
@@ -467,22 +467,22 @@ Promise.all([
   new Promise(res => Tone.Buffer.on('load', res))
 ])
   .then(() => {
-  mainOpenWeather().then(res => {
-    musicData = extractOWData(res);
-    console.log("accordo1 "+ musicData.pollution_chord);
-    console.log("accordo2 "+ musicData.weather_chord);
-    Promise.all([
-      generateSpace(0,musicData.pollution_chord,0, musicData.pollution_chord, pollList), 
-      generateSpace(0,musicData.weather_chord,0, musicData.weather_chord, tempList)])
-      .then(() => {
-        console.log("generata prima sequenza");
-        pollList[0].on = true;
-        tempList[0].on = true;
-        setGraphicParameters(res);
-        //Dopo 5 sec chiama la funzione principale
-        setTimeout(mainProcess, 2000);
-    })
-  });
+    mainOpenWeather().then(res => {
+      musicData = extractOWData(res);
+      console.log("accordo1 " + musicData.pollution_chord);
+      console.log("accordo2 " + musicData.weather_chord);
+      Promise.all([
+        generateSpace(0, musicData.pollution_chord, 0, musicData.pollution_chord, pollList),
+        generateSpace(0, musicData.weather_chord, 0, musicData.weather_chord, tempList)])
+        .then(() => {
+          console.log("generata prima sequenza");
+          pollList[0].on = true;
+          tempList[0].on = true;
+          setGraphicParameters(res);
+          //Dopo 5 sec chiama la funzione principale
+          setTimeout(mainProcess, 2000);
+        })
+    });
   })
   .then(() => startTransportPlay())
 
