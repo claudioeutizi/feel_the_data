@@ -184,6 +184,39 @@ myImage.addEventListener('load', function () {
     ctx.drawImage(myImage, (canvas.width / 2) - (canvas.height / 2) - 25, 0, canvas.height, canvas.height);
     const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Otteniamo il riferimento al canvas e al contesto
+    var c = document.getElementById('canvas1');
+    var ct = c.getContext('2d');
+
+// Definiamo la posizione e le dimensioni dell'area cliccabile
+    var areaIndietro = { x: 0, y: 0, w: 150, h: 50 };
+
+// Disegniamo il bottone all'interno del canvas
+    /*
+    ctx.fillStyle = "blue";
+    ctx.fillRect(areaIndietro.x, areaIndietro.y, areaIndietro.w, areaIndietro.h);
+    ctx.font = "20px Arial";
+    ctx.fillStyle = "white";
+    ctx.fillText("Indietro", areaIndietro.x + 10, areaIndietro.y + 30);
+    */
+
+    
+
+// Aggiungiamo un listener per l'evento click del mouse
+c.addEventListener("click", function(event) {
+  // Otteniamo le coordinate del click all'interno del canvas
+  var rect = canvas.getBoundingClientRect();
+  var mouseX = event.clientX - rect.left;
+  var mouseY = event.clientY - rect.top;
+
+  // Verifichiamo se il click è avvenuto all'interno dell'area cliccabile
+  if (mouseX >= areaIndietro.x && mouseX <= areaIndietro.x + areaIndietro.w &&
+      mouseY >= areaIndietro.y && mouseY <= areaIndietro.y + areaIndietro.h) {
+    // Se sì, ritorniamo alla pagina precedente
+    window.history.back();
+  }
+});
     
     let particlesArray = [];
     //Max 10000, Min 1000
@@ -288,7 +321,7 @@ myImage.addEventListener('load', function () {
         draw() {
             if (valoriOttenuti) {
                 //ctx.drawImage(myImage,  (canvas.width / 2) - (canvas.height / 2) - 25, 0,0,canvas.height,canvas.height);
-
+                
                 ctx.beginPath();
 
                 if ((mappedImage[this.position1]) &&
@@ -310,6 +343,14 @@ myImage.addEventListener('load', function () {
     init();
 
     function animate() {
+        setTimeout(() => {
+        ctx.fillStyle = "black";
+        ctx.fillRect(areaIndietro.x, areaIndietro.y, areaIndietro.w, areaIndietro.h);
+        ctx.font = "20px Arial";
+        ctx.fillStyle = "white";
+        ctx.fillText("BACK TO MAP", areaIndietro.x + 10, areaIndietro.y + 30);
+    }, 3000);
+
         ctx.globalAplha = 0.05;
         ctx.fillStyle = 'rgb(0, 0, 0, 0.05)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
