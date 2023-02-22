@@ -190,8 +190,8 @@ function setGraphicParameters(data) {
 
 const canvas = document.getElementById('canvas1');
 const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth - 20;
-canvas.height = window.innerHeight - 20;
+canvas.width = window.innerWidth-20;
+canvas.height = window.innerHeight-20;
 
 ctx.fillStyle = 'rgb(0, 0, 0, 50)';
 ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -372,7 +372,7 @@ myImage.addEventListener('load', function () {
             ctx.fillText("BACK TO MAP", areaIndietro.x + 10, areaIndietro.y + 30);
         }, 3000);
         /*---------------------*/
-
+        
         ctx.globalAplha = 0.05;
         ctx.fillStyle = 'rgb(0, 0, 0, 0.05)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);

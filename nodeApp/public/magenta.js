@@ -334,6 +334,7 @@ function startTransportPlay() {
 function stopTransportPlay() {
   if (!_.isNull(transportPlayerId)) {
     Tone.Transport.clear(transportPlayerId);
+    console.log("stopping play");
     transportPlayerId = null;
   }
 }
@@ -463,9 +464,14 @@ function changeBPM(value) {
   /*Tone.Transport.stop();
   Tone.Transport.bpm.value = value;
   Tone.Transport.start();*/
-  console.log("BPM " + value);
-  stopTransportPlay();
-  Tone.Transport.bpm.rampTo(value, 1);
+  console.log("stopping to change to " + value);
+
+  new Promise((resolve) =>{
+    stopTransportPlay()
+    setTimeout(resolve, 1);
+  }).then(Tone.Transport.bpm.rampTo(value, 1));
+
+  console.log("value changed");
   startTransportPlay();
 }
 

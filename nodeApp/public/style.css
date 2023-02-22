@@ -9,8 +9,12 @@
     box-sizing: border-box;
 }
 
+body{
+    margin:0;
+  }
+
 #canvas1 {
-    border: 2px solid white;
+    border: 0px solid black;
     position: absolute;
     top: 50%;
     left: 50%;
