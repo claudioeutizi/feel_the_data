@@ -5,6 +5,8 @@ let subtitlePoints;
 let subtitleBounds;
 let startTime;
 
+let description = false;
+
 let buttonWidth = 80;
 let buttonHeight = 40;
 let button;
@@ -49,6 +51,8 @@ function setup() {
             button.style('font-family','Gloock');
             button.style('letter-spacing', 2);
             button.mousePressed();
+            description = true;
+            //description = font.textBounds('Qualcosa', 500, 100, 250);
             
         }, showStartButton);
 }
@@ -60,6 +64,17 @@ function mousePressed(){
 function draw() {
     noStroke();
     background(27, 24, 24);
+    
+if(description){
+    textSize(20);
+    textFont("Gloock");
+    text('Creative Programming and Computing Project',5, windowHeight - 90);
+    fill(150, 153, 153);
+    text('C. Eutizi, G. Perego, R. Plandolit, F. Zezza',5, windowHeight - 60);
+    fill(0, 150, 153);
+    text('Politecnico di Milano', 5, windowHeight - 30);
+
+}
 
     
 
