@@ -166,7 +166,8 @@ function setGraphicParameters(data) {
     console.log("Delta temp " + deltaTemp);
     if(deltaTempMax>30){deltaTempMax = 30;}
     if(deltaTempMin<1){deltaTempMin = 1;}
-    biggo = getRandomBoolean();
+    dim = 3;
+    //biggo = getRandomBoolean();
 
     console.log("Biggo = "+biggo);
     
