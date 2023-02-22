@@ -159,15 +159,14 @@ function setGraphicParameters(data) {
 
     /* Dimension of particles depends on the weather: closer to max temperture means huge dimension */
     
-    dim = roundTo5(mapValue(data["weather"].main.temp, data["weather"].main.temp_min, data["weather"].main.temp_max, 1, 30));
-    deltaTemp = Math.abs(roundTo5(mapValue(data["weather"].main.feels_like,data["weather"].main.temp_min,data["weather"].main.temp_max,1,30)));
+    dim = roundTo5(mapValue(data["weather"].main.temp, data["weather"].main.temp_min, data["weather"].main.temp_max, 1, 20));
+    deltaTemp = Math.abs(roundTo5(mapValue(data["weather"].main.feels_like,data["weather"].main.temp_min,data["weather"].main.temp_max,1,20)));
     deltaTempMax = dim + deltaTemp;
     deltaTempMin = dim - deltaTemp;
     console.log("Delta temp " + deltaTemp);
-    if(deltaTempMax>30){deltaTempMax = 30;}
+    if(deltaTempMax>20){deltaTempMax = 20;}
     if(deltaTempMin<1){deltaTempMin = 1;}
-    dim = 3;
-    //biggo = getRandomBoolean();
+    biggo = getRandomBoolean();
 
     console.log("Biggo = "+biggo);
     
