@@ -465,7 +465,7 @@ function changeBPM(value) {
   Tone.Transport.bpm.value = value;
   Tone.Transport.start();*/
   console.log("stopping to change to " + value);
-
+  /*
   new Promise((resolve) =>{
     stopTransportPlay()
     setTimeout(resolve, 1);
@@ -473,6 +473,7 @@ function changeBPM(value) {
 
   console.log("value changed");
   startTransportPlay();
+  */
 }
 
 //ritorna l'accordo secondo il piano valence-arousal di chatGPT

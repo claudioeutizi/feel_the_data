@@ -6,7 +6,7 @@
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer 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'
+          'Authorization': 'Bearer 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'
         },
         body: dalleData // body data type must match "Content-Type" header
       });
