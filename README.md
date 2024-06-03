@@ -1,5 +1,5 @@
 # Feel the data
-![Thumbnail](https://github.com/claudioeutizi/feel_the_data/blob/main/thumbnail.jpg?raw=true)
+![Thumbnail](https://github.com/claudioeutizi/feel_the_data/blob/main/thumbnail.png?raw=true)
 # Try me: http://feel-the-data-rick1080p.onrender.com/
 ## A machine learning-based data sonification and visualization
 Map data to music and image, generating a data experience. The project is meant for anyone that is able to interact with a web app, from very young people (as it is almost usable just by looking at the images) to older ones
